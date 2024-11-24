@@ -1,0 +1,71 @@
+erDiagram
+    USERS{
+        int id PK
+        string username
+        string password
+        string email
+        variable __
+        int group_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    PRIVILEGES {
+        string bitfield PK
+        string name
+        string description
+    }
+    PRIVILEGES_GROUPS {
+        int group_id FK
+        int privilege_id FK
+    }
+    GROUPS {
+        int id PK
+        string name
+        string description
+    }
+    AUDIT_TRAIL {
+        int id PK
+        int user_id FK
+        string activity_name
+        string status
+        string description
+    }
+    SPRINT {
+        int id PK
+        string name
+        string description
+    }
+    GROUPS_ACTICVITY {
+        int group_id FK
+        int activity_id FK
+        string bitfield
+    }
+    ACTIVITY {
+        int id PK
+        int sprint_id FK
+        string name
+        string description
+    }
+    USER_TASK {
+        int user_id FK
+        int task_id FK
+        string bitfield "ex : 0000-0111"
+    }
+    TASK {
+        int id PK
+        int activity_id FK
+        string name
+        string description
+    }
+
+    USERS ||--|| GROUPS : "users has a group"
+    GROUPS ||--|{ PRIVILEGES_GROUPS : "groups may have many"
+    PRIVILEGES ||--|{ PRIVILEGES_GROUPS : "to many privileges"
+    USERS }|--o| AUDIT_TRAIL : "all user may has an audit trail"
+    SPRINT ||--|{ ACTIVITY : "sprint have many activity"
+    TASK }|--|| ACTIVITY : "activity have many tasks"
+    GROUPS ||--|{ GROUPS_ACTICVITY : "have many permissions to activty"
+    ACTIVITY ||--|{ GROUPS_ACTICVITY : "have some permissions"
+    USERS ||--|{ USER_TASK : "have a tasks"
+    TASK ||--|{ USER_TASK : "have a permissions"
+
