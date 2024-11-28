@@ -10,7 +10,7 @@ erDiagram
         timestamp updated_at
     }
     PRIVILEGES {
-        string bitfield PK
+        string id PK
         string name
         string description
     }
@@ -39,22 +39,14 @@ erDiagram
         string name
         string description
     }
-    GROUPS_ACTICVITY {
-        int group_id FK
-        int activity_id FK
-        string bitfield
-    }
+
     ACTIVITY {
         int id PK
         int sprint_id FK
         string name
         string description
     }
-    USER_TASK {
-        int user_id FK
-        int task_id FK
-        string bitfield "ex : 0000-0111"
-    }
+
     TASK {
         int id PK
         int activity_id FK
@@ -69,6 +61,38 @@ erDiagram
         string description
     }
 
+    RESOURCE {
+        int id PK
+        int user_id FK
+        int parameter_id FK
+    }
+
+    RESOURCE_PRIVILEGE {
+        int resource_id FK
+        int privilege_id FK
+    }
+
+    USER_SUBGROUP {
+        int subgroup_id FK
+        int user_id FK
+    }
+
+    SUBGROUP {
+        int id PK
+        int group_id FK
+        int parameter_id FK
+    }
+    SUBGROUP_PRIVILEGES {
+        int subgroup_id FK
+        int privilege_id FK
+    }
+
+    PARAMETER {
+        int id PK
+        int key "dbName.tableName.id"
+        int value "id number"
+    }
+
     USERS ||--|{ USER_GROUP : "users have many group"
     GROUPS ||--|{ USER_GROUP : "1 or more groups can be acquired by user"
     GROUPS ||--|{ PRIVILEGES_GROUPS : "groups may have many"
@@ -76,9 +100,17 @@ erDiagram
     USERS }|--o| AUDIT_TRAIL : "all user may has an audit trail"
     SPRINT ||--|{ ACTIVITY : "sprint have many activity"
     TASK }|--|| ACTIVITY : "activity have many tasks"
-    GROUPS ||--|{ GROUPS_ACTICVITY : "have many permissions to activty"
-    ACTIVITY ||--|{ GROUPS_ACTICVITY : "have some permissions"
-    USERS ||--|{ USER_TASK : "have a tasks"
-    TASK ||--|{ USER_TASK : "have a permissions"
     TASK ||--|{ MILESTONE : "have many milestone"
+    USERS ||--|{ USER_SUBGROUP : "have many"
+    SUBGROUP ||--|{ USER_SUBGROUP : "have many"
+    PRIVILEGES ||--|{ SUBGROUP_PRIVILEGES : "many"
+    SUBGROUP ||--|{ SUBGROUP_PRIVILEGES : "many"
+    SUBGROUP ||--|| PARAMETER : "many"
+    USERS ||--|{ RESOURCE : "many"
+    RESOURCE ||--|{ RESOURCE_PRIVILEGE : "many"
+    PRIVILEGES ||--|{ RESOURCE_PRIVILEGE : "many"
+    RESOURCE ||--|| PARAMETER : "one"
+
+
+
 
